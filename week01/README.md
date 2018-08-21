@@ -11,7 +11,7 @@ Let's dig into our new kit of parts! But first, download the [Arduino Independen
 
 ### Components
 
-##### Arduino Uno Rev 3
+#### Arduino Uno Rev 3
 
 ![Arduino Rev 3](https://cdn.sparkfun.com//assets/parts/6/3/4/3/11021-04.jpg)
 
@@ -21,7 +21,7 @@ The Arduino, unlike the Raspberry Pi, does not offer a graphical user interface.
 
 Arduino is a *specification*, rather than a singular product. It comes in many shapes and sizes, manufactured and released by many different companies and organizations targeted for different applications — a few of which will be explored thoughout the course. Read more about the mission and history of the [Arduino project](https://www.arduino.cc/en/Guide/Introduction).
 
-##### Jumper Cable
+#### Jumper Cable
 
 ![jumpers](https://cdn.sparkfun.com//assets/parts/1/1/8/1/JumperWire-Male-01-L.jpg)
 
@@ -37,7 +37,7 @@ Wiring can get confusing, do your best to encode your connection logic in your w
 
 There are many alternatives to wires for making connections — conductive fibers and textiles, ink, solder, and 
 
-##### Breadboard
+#### Breadboard
 
 ![Breadboard](https://cdn.sparkfun.com//assets/parts/9/2/8/7/12615-01.jpg)
 
@@ -49,19 +49,19 @@ The breadboard looks like a boring piece of plastic with some holes in it. But, 
 
 ![breadboard connections](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXNJxVaLVXgt4cUjh_Ur4_K5yGOTmLNBGzCKl4EDfxraC-hDyf)
 
-##### LED (Light Emitting Diode)
+#### LED (Light Emitting Diode)
 
 ![LEDs](https://cdn.sparkfun.com/assets/b/7/6/0/4/51f1ba6bce395f3c20000003.jpg)
 
 LEDs convert electricity into light! They come in many different packages, colors, sizes, beam angles, and brightness levels. Each LED has an anode (long leg, current in) and a cathode (short leg, power out). Though LEDs are often rightfully praised for their low power requirements, high brightness LEDs and LED matrices/strips often require their own dedicated power supplies. Learn more about how LEDs work [here](https://learn.sparkfun.com/tutorials/light-emitting-diodes-leds).
 
-##### Pull Up Resistor
+#### Pull Up Resistor
 
 ![pull up resistor](https://cdn.sparkfun.com//assets/parts/8/3/1/08374-02-L.jpg)
 
 The 10K Ohm resistor is used in combination with the buttons and other sensors to ensure that current flows and that the state of the pin is always known. Otherwise, power would not flow directly to ground through the sensor, and the individual pin value would be *floating* between high and low. Pull Up Resistors (resistors with high resistance values, which resist *less*) and Pull Down Resistors (resistors with low resistance values, which resist *more*) are often used in this way, and will be discussed in future weeks. You can [read more](https://learn.sparkfun.com/tutorials/pull-up-resistors) about resistors, but they will be confusing for a while.
 
-##### Pushbutton
+#### Pushbutton
 
 ![Pushbutton](https://cdn.sparkfun.com//assets/parts/9/0/00097-03-L.jpg)
 
@@ -69,7 +69,7 @@ Buttons are simple components in complex packagings. They are effectively broken
 
 Buttons come in [many different form factors and sizes](https://www.sparkfun.com/search/results?term=button) for different applications, with slightly different behaviors.
 
-##### Trimpot (Potentiometer)
+#### Trimpot (Potentiometer)
 
 ![Trimpot](https://cdn.sparkfun.com//assets/parts/3/8/2/3/09806-01.jpg)
 
@@ -77,7 +77,7 @@ Trimpots, a diminuitive member of a family of components called potentiometers, 
 
 ![conductive wiper](https://i.stack.imgur.com/XXQEm.gif)
 
-##### Photoresistor (or Light-Dependent Resistor)
+#### Photoresistor (or Light-Dependent Resistor)
 
 ![Photoresistor](https://cdn.sparkfun.com//assets/parts/2/4/6/2/09088-02-L.jpg)
 
@@ -87,19 +87,19 @@ This small *analog* sensor relys on the flexion that occurs when a lead-based me
 
 ### Circuits
 
-##### Direct LED Control
+#### Direct LED Control
 
 Control an LED by making a connection with a button.
 
 ![direct connection](direct.png)
 
-##### Programmatic LED Control
+#### Programmatic LED Control
 
 Control an LED by reading a button state with Arduino.
 
 ![programmatic connection](indirect.png)
 
-##### LED Controller 
+#### LED Controller 
 
 Control an LED by reading from a variety of sensors.
 
