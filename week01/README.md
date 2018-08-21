@@ -51,7 +51,7 @@ The breadboard looks like a boring piece of plastic with some holes in it. But, 
 
 #### LED (Light Emitting Diode)
 
-![LEDs](https://cdn.sparkfun.com/assets/b/7/6/0/4/51f1ba6bce395f3c20000003.jpg)
+![LEDs](https://cdn.sparkfun.com//assets/parts/1/2/6/9/7/14563-Green_LEDs_with_built_in_resistor__25_pack_-01.jpg)
 
 LEDs convert electricity into light! They come in many different packages, colors, sizes, beam angles, and brightness levels. Each LED has an anode (long leg, current in) and a cathode (short leg, power out). Though LEDs are often rightfully praised for their low power requirements, high brightness LEDs and LED matrices/strips often require their own dedicated power supplies. Learn more about how LEDs work [here](https://learn.sparkfun.com/tutorials/light-emitting-diodes-leds).
 
