@@ -119,4 +119,6 @@ Come back after class!
 
 ### Homework
 
-With *3 Buttons* and *3 colored LEDS*, create a body-mounted light controller *without modifying your breadboard*. How could such an object be useful? Other than having a 1:1 relationship between buttons and LEDs, what could some other designed behaviors be? Could an additional button manage whether or not LEDs flash? Could multiple LEDs be on at once, and if so, how could button presses manage all the possible permutations? Could a potentiometer be introduced to manage modal complexity?
+With *3 Buttons* and *3 colored LEDS*, create a body-mounted LED controller *without modifying your breadboard*. Please use only raw materials (no Lego parts or pre-fabricated/sourced components), get into the Shop!
+
+How could such an object be useful? Other than having a 1:1 relationship between buttons and LEDs, what could some other designed behaviors be? Could an additional button manage whether or not LEDs flash? Could multiple LEDs be active at once, and if so, how could button presses manage all the possible permutations? Could a potentiometer be introduced to manage modal complexity?
