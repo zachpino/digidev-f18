@@ -3,7 +3,7 @@
 Let's dig into our new kit of parts! But first, download the [Arduino Independent Development Environment](https://www.arduino.cc/en/Main/Software).
 
 - [Components](#components): Arduino Uno, Jumper Cable, Breadboard, LED, Resistor, Pushbutton, Potentiometer, Photoresistor
-- [Circuits](#circuit): Various LED Controllers
+- [Circuits](#circuits): Various LED Controllers
 - [Code](#code): pinMode(), digitalRead(), digitalWrite(), analogRead(), delay(), Serial Communication, if(){}, else{}
 - [Homework](#homework) : Wearable LED Controller
 
@@ -61,7 +61,7 @@ LEDs convert electricity into light! They come in many different packages, color
 
 The 10K Ohm resistor is used in combination with  buttons and other sensors to ensure that current flows and that the state of the pin is always known. Otherwise, power would not flow directly to ground through the sensor, and the individual pin value would be *floating* between high and low. Pull Up Resistors (resistors with high resistance values, which resist *less*) and Pull Down Resistors (resistors with low resistance values, which resist *more*) are often used in this way, and will be discussed in future weeks. You can [read more](https://learn.sparkfun.com/tutorials/pull-up-resistors) about resistors, but they will be confusing for a while.
 
-Get to know the resistor color code! The amount of electricity resisted by these little bits of ceramic is encoded in their colored stripes.
+Get to know the resistor color code! The amount of electricity resisted by these little bits of ceramic is encoded in their colored stripes.	
 
 ![resistor color code](http://nearbus.net/mediawiki/images/7/7d/Resistor_color_codes.jpg)
 
