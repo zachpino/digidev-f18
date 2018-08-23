@@ -73,20 +73,6 @@ Buttons are simple components in complex packagings. They are effectively broken
 
 Buttons come in [many different form factors and sizes](https://www.sparkfun.com/search/results?term=button) for different applications, with slightly different behaviors.
 
-#### Trimpot (Potentiometer)
-
-![Trimpot](https://cdn.sparkfun.com//assets/parts/3/8/2/3/09806-01.jpg)
-
-Trimpots, a diminuitive member of a family of components called potentiometers, are resistors - though their resistance is not set and instead changes depending on the position of a knob. As the knob is rotated clockwise, a conductive wiper inside moves along a resistive strip, forcing the electrons to travel through more or less resistive material. This attenuates the electrical signal, weakening it proportionally.
-
-![conductive wiper](https://i.stack.imgur.com/XXQEm.gif)
-
-#### Photoresistor (or Light-Dependent Resistor)
-
-![Photoresistor](https://cdn.sparkfun.com//assets/parts/2/4/6/2/09088-02-L.jpg)
-
-This small *analog* sensor relys on the flexion that occurs when a lead-based metal alloy (wash your hands after touching it!) is exposed to light and minutely adjusts its electrical resistance. The more light that strikes the [photoresistor](https://en.wikipedia.org/wiki/Photoresistor) and its characteristic wave-shaped *bandgap*, the more voltage can flow through the component. In the darkness, the component has a high resistance and prevents the flow of electrons from jumping the bandgap. Photoresistors are used in any object that need to reference the general intensity of light or shadow in a space, and are frequently used in for day-night behavior switching.
-
 ----- 
 
 ### Circuits
@@ -103,17 +89,48 @@ Control an LED by reading a button state with Arduino.
 
 ![programmatic connection](indirect.png)
 
-#### LED Controller 
-
-Control an LED by reading from a variety of sensors.
-
-![controller](led-controller.png)
-
 -----
 
 ### Code
 
-Come back after class! 
+```c
+//button on pin 2
+//led on pin 6
+
+//code in setup runs once
+void setup() {
+  //Are the GPIO pins speaking or listening?
+  pinMode(2, INPUT);
+  pinMode(6, OUTPUT);
+
+  //turn on serial (usb) communication
+  Serial.begin(9600);
+
+}
+
+//code in loop runs over and over
+void loop() {
+  //store if the button is pressed or unpressed in a reusable variable
+  int buttonState = digitalRead(2);
+  Serial.print("Button Reading: ");
+  Serial.println(buttonState);
+
+  //make a decision based on buttonState
+  if (buttonState == 1) {
+    //turn on LED
+    digitalWrite(6, HIGH);
+    //prevent flicker
+    delay(10);
+  }
+
+  else {
+    //turn off LED
+    digitalWrite(6, LOW);
+    //prevent flicker
+    delay(10);
+  }
+}
+```
 
 -----
 
@@ -121,4 +138,4 @@ Come back after class!
 
 With *3 Buttons* and *3 colored LEDS*, create a body-mounted LED controller *without modifying your breadboard*. Please use only raw materials (no Lego parts or pre-fabricated/sourced components), get into the Shop!
 
-How could such an object be useful? Other than having a 1:1 relationship between buttons and LEDs, what could some other designed behaviors be? Could an additional button manage whether or not LEDs flash? Could multiple LEDs be active at once, and if so, how could button presses manage all the possible permutations? Could a potentiometer be introduced to manage modal complexity?
+How could such an object be useful? Other than having a 1:1 relationship between buttons and LEDs, what could some other designed behaviors be? Could an additional button manage whether or not LEDs flash? Could multiple LEDs be active at once, and if so, how could button presses manage all the possible permutations? 
