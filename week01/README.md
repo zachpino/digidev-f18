@@ -93,6 +93,8 @@ Control an LED by reading a button state with Arduino.
 
 ### Code
 
+Double check that "Tools" -> "Board" is set to "Arduino/Genuino Uno" and that "Tools" -> "Port" is set to whichever "COM" USB port has a connected "Arduino Uno".
+
 ```c
 //button on pin 2
 //led on pin 6
@@ -112,17 +114,20 @@ void setup() {
 void loop() {
   //store if the button is pressed or unpressed in a reusable variable
   int buttonState = digitalRead(2);
+
+  //send the state of the button over usb so our computer can see it
   Serial.print("Button Reading: ");
   Serial.println(buttonState);
 
   //make a decision based on buttonState
+  //if the button is pressed
   if (buttonState == 1) {
     //turn on LED
     digitalWrite(6, HIGH);
     //prevent flicker
     delay(10);
   }
-
+  //else the button is unpressed
   else {
     //turn off LED
     digitalWrite(6, LOW);
