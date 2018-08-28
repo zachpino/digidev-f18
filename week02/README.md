@@ -8,6 +8,7 @@ Be aware that the use of the terms *digital* and *analog* in this context refer 
 
 First, make sure you [download and install Fritzing](http://fritzing.org/download/), a great open source program for drawing pretty circuit diagrams.
 
+- [Hydraulic Analogy for Electricity](https://learn.sparkfun.com/tutorials/voltage-current-resistance-and-ohms-law/current)
 - [Components](#components): RGB LED, Trimpot, Potentiometer, Photoresistor, Thermistor
 - [Circuits](#circuits): Analog Sensor Array
 - [Code](#code): analogRead(), analogWrite(), map(), constrain()
