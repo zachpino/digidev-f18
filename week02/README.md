@@ -50,6 +50,8 @@ In order to use a photoresistor, we use a [voltage divider circuit](https://lear
 
 #### Thermistor
 
+![Thermistor ](https://storage.googleapis.com/stateless-www-faranux-com/2017/09/Thermistor.jpg)
+
 Similar to the photoresistor and wired the same way, a thermistor is a variable resistor that changes its resistance depending on an external phenomenon — namely temperature. As ambient heat increases (or decreases, depending on the [type of thermistor](https://en.wikipedia.org/wiki/Thermistor#Steinhart–Hart_equation)), the resistance increases. That increase is not instantaneous, though it is predictable and consistent. Importantly, thermistors generate waste heat and heat themselves up over time! This makes them unreliable for longterm and precision application. Further, hobbyist thermistors are sensitive to a narrow range of temperatures — but more [advanced temperature sensors](https://www.sparkfun.com/search/results?term=temperature+sensor) are available that can measure all kinds of temperatures and don't introduce their own heat. 
 
 [A complicated equation](https://en.wikipedia.org/wiki/Thermistor#Steinhart–Hart_equation) can actually convert the analog voltage readings from thermistors to real temperatures, though that operation is computationally expensive and the results are always fairly noisy. Read more about thermistors and how to get real temperature values out of them [here](https://learn.adafruit.com/thermistor/using-a-thermistor).
