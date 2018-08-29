@@ -34,6 +34,12 @@ Potentiometers, and their tiny family members trimpots, are resistors - though t
 
 ![conductive wiper](https://i.stack.imgur.com/XXQEm.gif)
 
+#### Joystick
+
+![Joysticks](https://cdn.sparkfun.com//assets/parts/2/4/2/7/09032-03-L.jpg)
+
+Just a clever combination of two potentiometers and a button! This component offers 3 outputs: 2 analog outputs for the 2 dimensions of stick movement, as well as a digital 'click-in' button which works the same as any pushbutton. 
+
 #### Photoresistor (or Light-Dependent Resistor)
 
 ![Photoresistor](https://cdn.sparkfun.com//assets/parts/2/4/6/2/09088-02-L.jpg)
@@ -70,9 +76,19 @@ Check your expectations and review pullup and pulldown resistors
 
 #### Analog Sensor Array
 
-Check the outputs of various analog sensors
+Check the outputs of various analog sensors. 
 
 ![analog array](analogarray.png)
+
+Make sure that the labels on your joystick match how you wire it. The diagram above shows a different pin ordering than our kit joystick, which should be wired like this...
+
+```
+GND -> Ground
++5V -> 5 Volts
+vRx -> Analog Pin (A3)
+vRy -> Analog Pin (A4)
+SW  -> Digital Pin (2)
+```
 
 -----
 
@@ -80,7 +96,75 @@ Check the outputs of various analog sensors
 
 Double check that "Tools" -> "Board" is set to "Arduino/Genuino Uno" and that "Tools" -> "Port" is set to whichever "COM" USB port has a connected "Arduino Uno".
 
-Come back after class! 
+```c
+void setup() {
+  // put your setup code here, to run once:
+ 
+  //this the rgb led
+  pinMode(9, OUTPUT);
+  pinMode(10, OUTPUT);
+  pinMode(11, OUTPUT);
+
+  //these are all of the sensor probes...
+  //click-in of the joystick
+  pinMode(2, INPUT);
+  //various sensors
+  pinMode(A0, INPUT);
+  pinMode(A1, INPUT);
+  pinMode(A2, INPUT);
+  pinMode(A3, INPUT);
+  pinMode(A4, INPUT);
+  pinMode(A5, INPUT);
+
+  //open the connection to usb port on computer
+  Serial.begin(9600);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+  //read state of all sensors
+  int lightReading = analogRead(A0);
+  int potReading = analogRead(A1);
+  int trimpotReading = analogRead(A2);
+  int joystickX = analogRead(A3);
+  int joystickY = analogRead(A4);
+  int heatReading = analogRead(A5);
+
+  //remap all sensor readings so that their 10bit captured data can be used to write to 8bit LEDs
+  potReading = map(potReading, 0, 1023, 0, 255);
+  trimpotReading = map(trimpotReading, 0, 1023, 0, 255);
+  joystickX = map(joystickX, 0, 1023, 0, 255);
+  joystickY = map(joystickY, 0, 1023, 0, 255);
+
+  //heat and light sensors need to have their min and max values determined experimentally using the serial monitor.
+  lightReading = map(lightReading, 600, 850, 0, 255);
+  heatReading = map(heatReading, 350, 750, 0, 255);
+
+  //communicate all mapped values over usb
+  Serial.print("potentiometer: ");
+  Serial.println(potReading);
+  Serial.print("trimpot: ");
+  Serial.println(trimpotReading);
+  Serial.print("horizontal joystick: ");
+  Serial.println(joystickX);
+  Serial.print("vertical joystick: ");
+  Serial.println(joystickY);
+  Serial.print("light: ");
+  Serial.println(lightReading);
+  Serial.print("heat: ");
+  Serial.println(heatReading);
+
+  //control RGB LED with sensors
+  //try different variables here
+  analogWrite(9, trimpotReading);
+  analogWrite(10, joystickX);
+  analogWrite(11, joystickY);
+
+  //slow things down for easier serial monitor reading
+  delay(100);
+}
+```
 
 -----
 
