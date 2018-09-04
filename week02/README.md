@@ -12,7 +12,7 @@ First, make sure you [download and install Fritzing](http://fritzing.org/downloa
 - [Components](#components): RGB LED, Trimpot, Potentiometer, Photoresistor, Thermistor
 - [Circuits](#circuits): Analog Sensor Array
 - [Code](#code): analogRead(), analogWrite(), map(), constrain()
-- [Homework](#homework) : Wearable Nighlight
+- [Homework](#homework) : Wearable Nightlight
 
 -----
 
