@@ -7,7 +7,7 @@ We'll look at music as a space to explore controlled looping. Please check out [
 - [Hydraulic Analogy for Electricity](https://learn.sparkfun.com/tutorials/voltage-current-resistance-and-ohms-law/current)
 - [Components](#components): Passive and Active Piezo Buzzer
 - [Circuits](#circuits): Keyboard and Drum Machine
-- [Code](#code): tone(), for(){}, while(){}
+- [Code](#code): tone(), for(){}, while(){}, delayMicroseconds()
 - [Homework](#homework) : Wearable Instrument
 
 -----
@@ -20,9 +20,11 @@ We'll look at music as a space to explore controlled looping. Please check out [
 
 *Piezo* is a prefix and standalone term that comes up frequently in electronics. It always refers to how materials that assume a crystalline structure like minerals and ceramics can store electric charges, and when they do, oscillate and vibrate at very predictable rates. This works in both directions — a small crystal will vibrate at a certain frequency when a current of a certain voltage is passed through it, and if one vibrates that same small crystal at that same frequency, it will produce identical voltage. For this reason, piezo crystal oscillators (often called 'quartz' oscillators) are used in just about any computational system to keep accurate time.
 
-A piezo buzzer uses this physical phenomenon to use electricity to vibrate a small crystal, which in turn displaces a certain amount of air. This displacement creates a vacuum, and a [sound wave](https://en.wikipedia.org/wiki/Sound#Sound_wave_properties_and_characteristics) is formed. Beep! 
+A piezo buzzer leverages this physical phenomenon and uses *oscillating* electrical signals to vibrate a small crystal, which in turn displaces a certain amount of air. This displacement creates a vacuum, and a [sound wave](https://en.wikipedia.org/wiki/Sound#Sound_wave_properties_and_characteristics) is formed. [Beep!](https://www.youtube.com/watch?v=AhrtsxbZvok) 
 
-Piezo buzzers create monophonic waves with little possible expressibility. Notably, with additional coding work, other [shapes of sound waves](https://en.wikipedia.org/wiki/Square_wave) than regular square waves can be made that approximate more natural sounds. They will always sound like SNES buzzes, beeps, and bloops. [Clever coding and fancy wiring](http://www.opencircuits.com/Microcontroller_polyphony) can produce [simple polyphony](https://en.wikipedia.org/wiki/Polyphony), but piezo buzzers will never sound like a violin or a saxophone. 
+Piezo buzzers create monophonic waves with little possible expressibility. Notably, with additional coding work, other [shapes of sound waves](https://en.wikipedia.org/wiki/Square_wave) than regular square waves can be made that approximate more natural sounds. They will always sound like old cellphone ringtones: buzzes, beeps, and bloops. [Clever coding and fancy wiring](http://www.opencircuits.com/Microcontroller_polyphony) can produce [simple polyphony](https://en.wikipedia.org/wiki/Polyphony), but piezo buzzers will never sound like a violin or a saxophone. 
+
+Note that Passive Piezo Buzzers require a PWM pin to operate, as a quickly oscillating electrical signal is required.
 
 
 #### Active Piezo Buzzer
@@ -31,7 +33,7 @@ Piezo buzzers create monophonic waves with little possible expressibility. Notab
 
 Active buzzer, with black epoxy on bottom, at left. Passive buzzer, with green PCB, at right. 
 
-Active buzzers are fancier than passive buzzers, but operate on the same principle. An electric current is passed through a crystal, causing a small but very fast vibration — which in turn creates an air pressure wave. An active buzzer has an oscillator built into it, so all that is required is applied voltage to make sound (no PWM pin necessary). A constant `HIGH` signal will make sound, no `LOW` pulsing is required. There's very little reason to choose a more expensive and complicated Active Buzzer over a Passive Buzzer, unless you are totally out of PWM pins.
+Active buzzers are fancier than passive buzzers, but operate on the same principle. An electric current is passed through a crystal, causing a small but very fast vibration — which in turn creates an air pressure wave. An active buzzer has a current oscillator built into it, so all that is required is applied voltage to make sound (no PWM pin necessary). A constant `HIGH` signal will make sound, no `LOW` pulsing is required. There's very little reason to choose a more expensive and complicated Active Buzzer over a Passive Buzzer, unless you are totally out of PWM pins.
 
 ----- 
 
