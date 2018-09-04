@@ -1,6 +1,6 @@
 # Week 03 · Looping
 
-We've so far written code that runs from top to bottom. *Check a sensor*, *do some math*, *send out a signal*. We've looked at branching with `if(){}` and `else{}` as a way to allow code to make a decision, but our code has never before iterated or looped through a set of repeatable commands, or hold in a certain state until something changes. Let's make that happen today and massively increase our programming power.
+We've so far written code that runs from top to bottom. *Check a sensor*, *do some math*, *send out a signal*. We've looked at branching with `if(){}` and `else{}` as a way to allow code to make a decision, but our code has never before iterated or looped through a set of repeatable commands, or remained in a certain state until something changed. Let's make that happen today and massively increase our programming power.
 
 We'll look at music as a space to explore controlled looping. Please check out [this wikipedia page](https://en.wikipedia.org/wiki/Piano_key_frequencies) as a reference for the frequency parameter of musical notes.
 
