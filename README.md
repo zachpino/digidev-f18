@@ -5,4 +5,5 @@ Documentation and Resources for the Fall 2018 IIT Institute of Design Digital De
 - [Week 01 · Course Introduction](week01/README.md) 	
 - [Week 02 · Analog vs. Digital](week02/README.md) 	
 - [Week 03 · Looping](week03/README.md) 	
+- [Week 04 · Odds and Ends](week04/README.md) 	
 
