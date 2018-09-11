@@ -4,9 +4,9 @@ Let's use our new PWM and looping abilities to work on DC motors, and leverage d
 
 - [Hydraulic Analogy for Electricity](https://learn.sparkfun.com/tutorials/voltage-current-resistance-and-ohms-law/current)
 - [Soldering Tutorial Review](https://www.youtube.com/watch?v=Qps9woUGkvI)
-- [Components](#components): Passive and Active Piezo Buzzer
-- [Circuits](#circuits): Keyboard and Drum Machine
-- [Code](#code): tone(), for(){}, while(){}, delayMicroseconds()
+- [Components](#components): DC Motor, Servo Motor, Transistor, Diode, DHT11 Sensor
+- [Circuits](#circuits): Personal Fan
+- [Code](#code): for(){}, Serial.available(), parseInt()
 - [Homework](#homework) : Wearable Instrument
 
 -----
@@ -77,7 +77,7 @@ Remember to try to wire with an encoding schema in mind...
 - Yellow or Purple for Generic Signals
 - Green and Blue for I2C Communication
 
-#### Motor Experiment
+#### Personal Fan
 
 Spinning and thermometering! 
 
