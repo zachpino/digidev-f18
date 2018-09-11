@@ -6,7 +6,7 @@ Let's use our new PWM and looping abilities to work on DC motors, and leverage d
 - [Soldering Tutorial Review](https://www.youtube.com/watch?v=Qps9woUGkvI)
 - [Components](#components): DC Motor, Servo Motor, Transistor, Diode, DHT11 Sensor
 - [Circuits](#circuits): Personal Fan
-- [Code](#code): for(){}, Serial.available(), parseInt()
+- [Code](#code): for(){}, Serial.available(), Serial.parseInt()
 - [Homework](#homework) : Wearable Instrument
 
 -----
