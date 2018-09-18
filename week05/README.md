@@ -1,4 +1,4 @@
-# Week 04 · Odds and Ends · DC Motors, Non-Continuous Servo, Digital Sensor and Libraries, and Soldering
+# Week 04 · Action at a Distance
 
 Let's use our new PWM and looping abilities to work on DC motors, and leverage digital signaling to access a servo motor and a temperature/humidity sensor. 
 
@@ -6,8 +6,8 @@ Let's use our new PWM and looping abilities to work on DC motors, and leverage d
 - [Soldering Tutorial Review](https://www.youtube.com/watch?v=Qps9woUGkvI)
 - [Components](#components): DC Motor, Servo Motor, Transistor, Diode, DHT11 Sensor
 - [Circuits](#circuits): Personal Fan
-- [Code](#code): for(){}, Serial.available(), Serial.parseInt()
-- [Homework](#homework) : Research
+- [Code](#code): ! (not), various libraries, function declarations
+- [Homework](#homework) : Wearable Instrument
 
 -----
 
@@ -89,6 +89,8 @@ Spinning and thermometering!
 
 Double check that "Tools" -> "Board" is set to "Arduino/Genuino Uno" and that "Tools" -> "Port" is set to whichever "COM" USB port has a connected "Arduino Uno".
 
+Come back after class! 
+
 ```c
 int motorPin = 3;
  
@@ -120,5 +122,6 @@ void loop()
 A week off from breadboarding!
 
 - Solder 10 wires onto 10 other wires. Make some jewelery! 
-- Check out the sensors available on [Sparkfun.com](https://www.sparkfun.com/categories/23) and [Adafruit.com ](https://www.adafruit.com/category/35) and identify 3 that are interesting to discuss **as a class**. Try to find a tutorial for each of the 3 and read through what would be required to get it working. What kind of data does it produce?
+- Solder your backpack onto your LCD screen component
+- Check out the sensors available on [Sparkfun.com](https://www.sparkfun.com/categories/23) and [Adafruit.com ](https://www.adafruit.com/category/35) and identify 3 that are interesting to discuss. Try to find a tutorial for each of the 3 and read through what would be required to get it working. What kind of data does it produce?
 
