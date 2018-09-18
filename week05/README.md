@@ -1,67 +1,63 @@
-# Week 04 · Action at a Distance
+# Week 05 · Action at a Distance
 
-Let's use our new PWM and looping abilities to work on DC motors, and leverage digital signaling to access a servo motor and a temperature/humidity sensor. 
+Let's use get some libraries into play, and implement more advanced digital sensors and actuators. We'll focus this week on how to go about glueing sample code together.
 
-- [Hydraulic Analogy for Electricity](https://learn.sparkfun.com/tutorials/voltage-current-resistance-and-ohms-law/current)
-- [Soldering Tutorial Review](https://www.youtube.com/watch?v=Qps9woUGkvI)
-- [Components](#components): DC Motor, Servo Motor, Transistor, Diode, DHT11 Sensor
-- [Circuits](#circuits): Personal Fan
-- [Code](#code): ! (not), various libraries, function declarations
+- [Components](#components): IR Remote and Receiver, LCD Backpack, DHT11 Temperature and Humidity Sensor
+- [Circuits](#circuits): Remote Control Color Light
+- [Code](#code): ! (not), various libraries, function declarations, compound conditionals, type casting
 - [Homework](#homework) : Wearable Instrument
 
 -----
 
 ### Components
 
-#### DC Motor
+#### IR Remote and TSOP38238 Receiver
 
-![DC Motor](https://cdn-shop.adafruit.com/970x728/711-06.jpg)
+![IR remote and receiver](https://cdn-shop.adafruit.com/970x728/157-01.jpg)
 
-A DC motor converts electricity into a magnetic field, which in turn drives rotational movement. Inside the motor housing, a set of permanent magnets exert force on the 'armature', a carefully shaped piece of wire through which electrons flow. The magnets exert a force on the electrons as they pass through the cylinder of the motor, and torque is created according to Fleming's [Left Hand Rule](https://en.wikipedia.org/wiki/Fleming%27s_left-hand_rule_for_motors). DC motors are designed to spin fast, and not to exert much torque. For this reason, they often require [gearing up or down](https://en.wikipedia.org/wiki/Gear).
+This combination of components allows us to signal the Arduino at a distance and actuate selectively based on a variety of different button presses.
 
-Motors are simple components, but they require a couple of safety measures [explained well here](http://www.sharetechnote.com/html/Arduino_MotorBasics.html). Rather than driving motors directly with a PWM pin, it is very important to use a transistor with a PWM pin as well as a diode to protect the Arduino.
+Fundamentally, an IR remote is just an LED that blinks light *really fast* that we can't see. Most IR remotes operate at 940 nanometers, which is above the human eye's limit of around 700 nanometers. If we were far more sensitive like a [salamander more attuned to IR raditation](https://en.wikipedia.org/wiki/Axolotl), our skin might be able to sense an IR remote blast as heat! 
 
-Fancy motor driving chips, like the well-known [L293D](https://www.adafruit.com/product/807), can toggle the polarity of the signal and allow a DC motor to spin in both directions. With a transistor, though, only one direction of spin is possible.
+When different buttons are pressed on an IR remote, unique patterns are flashed by the infrared LED, sort of like [Morse Code](https://en.wikipedia.org/wiki/Morse_code) or [semaphore](https://en.wikipedia.org/wiki/Flag_semaphore). This sort of signaling has [been around since the early industrial revolution](https://en.wikipedia.org/wiki/Infrared#History_of_infrared_science), and yet the technology world is currently abandoning it for Bluetooth and NFC — which often makes for less reliable, more complex, and far power-hungrier outcomes. Nevertheless, designers continue to do [some super interesting experiments](http://niklas-isselburg.com/project-binairy_talk.php) in the space. In the consumer electronics world, universal and learning remotes like [Logitech Harmony Remotes](https://www.logitech.com/en-us/harmony-universal-remotes) can mimic the flashing patterns of other remotes and send appropriate signals to device receivers.
 
-Motors require electricity to spin, but they can also be spun to *produce electricity*. When used in this way, DC motors are instead called turbines, and are deployed all over the world as [hydroelecric and anemoelectric generators](https://en.wikipedia.org/wiki/Water_turbine). This allows for fun power storage and reclamation projects [like this one](https://www.wired.com/story/battery-built-from-concrete/).
+Due to the fast switching nature of the infrared signal's carrier signal (38,000 cycles per second) and the slow processing of the Arduino Uno's PWM pins (~500 cycles per second), the signal needs to be processed by an IR receiver: the TSOP38238. The receiver component converts the various fast switching operations, and demodulates it (decodes and slows it down) for our microcontroller.
 
-![motor working principle](http://hyperphysics.phy-astr.gsu.edu/hbase/magnetic/imgmag/dcmcur.gif)
-
-
-#### NPN Transistor
-
-![NPN Transistor](https://cdn-shop.adafruit.com/970x728/756-03.jpg)
-
-Transistors sit at the heart of every general purpose computer, making up the processors of computers. Transistors are fundamentally switches — but rather than relying upon a human for actuation — an electric current is used to open a connection. Whatever is connected to the *collector* leg is released to the *emitter* leg when the *base leg* receives power above a certain threshold. Read that last sentence a few times, and it will make sense!
-
-![transistor legs](https://www.elprocus.com/wp-content/uploads/2013/01/NPN.jpg)
-
-Transistors are often used to manipulate high voltage and amperage electrical components with low voltage controllers and drivers.
+Learn more about the complex [modulation and demodulation](https://learn.sparkfun.com/tutorials/ir-communication#ir-communication-basics) that makes every television remote work. It's magic that this stuff operates at all, and yet it's so commonplace that we only notice it when it fails. 
 
 
-#### Diode
+#### Liquid Crystal Display (LCD) and I2C Backpack
 
-![diodes](https://cdn-shop.adafruit.com/970x728/755-03.jpg)
+![LCD](https://cdn-shop.adafruit.com/970x728/181-02.jpg)
 
-Diodes are simple components. They are wires, but they only allow the flow of electricity in one direction. In most cases, diodes are used as *flybacks*, which [protect components from high kickback voltage](https://en.wikipedia.org/wiki/Flyback_diode). Diodes always have a stripe or mark on them near their *cathode*. Electrons can only flow through diodes from anode to cathode, so commonly in circuits, it looks like they are connected backwards — since they are there for protection! [All LEDs are diodes](https://learn.sparkfun.com/tutorials/polarity/diode-and-led-polarity), it just so happens that they convert electons flowing through them into visual photos, rather than heat.
+Finally, some visual feedback! 
+
+These simple screens — still common in calculators, microwaves, and fitness trackers amongst other household digital objects — rely on the previously mentioned relationship between crystals and electricity. Each one of a field of tiny crystals uses a mated transistor to straighten out or rotate. When energized, the [crystal rotates and blocks polarized light](https://www.explainthatstuff.com/lcdtv.html) from passing through it, kind of like window blinds. Otherwise, it is an ugly, mostly transmissive green. An LED backlight of variable color is often placed behind the crystal matrix, so that contrast can be improved. LCD displays are amazingly low power-consumptive compared to most other display types.
+
+16 pins are used to control an LCD display with a backlight. 4 manage power, 1 controls the brightness of the LED backlight, 2 handle selecting and writing to specific memory registers (used to set where to display characters), and 8 handle the choice of characters themselves and data transfer (which needs to happen in a very particular sequence).
+
+![LCD bare](https://components101.com/sites/default/files/component_pin/16x2-LCD-Pinout.png)
+
+This is crazy, it would eat up most of our Arduino's available pins on its own! 
+
+Because of the complexity of the pinout of LCD components, we will use a simplifying code libary and hardware *backpack*, whose sole job is to reduce the number of pins required to plug in the component. This particular backback leverages the [I2C digital communication standard](https://learn.sparkfun.com/tutorials/i2c), common to hobbyist digital sensors. I2C, short for "inter-integrated circuits" and pronounced "eye-squared-sea," was invented in 1982 to aid in the digital communication between a fast 'master' device and many slower attached 'slave' devices — solving the timing problems exhibited by its competitor standard, SPI (to be discussed later). Each device in an I2C system needs to have a unique address, and up to 111 unique devices can be connected in the same circuit, usually *on the same 4 pins*. This expands our Arduino's reach considerably.
+
+(BTW the offensive and anachronistic naming convention unfortunately chosen by the I2C creators is currently being attacked by most [progressive computer scientists](https://www.theregister.co.uk/2018/09/11/python_purges_master_and_slave_in_political_pogrom/). Let's hope it soon gets replaced.)
+
+I2C is an easy to implement standard that uses pins labels `SDA` and `SCL` for all communication. `SDA` carries the *da*ta between master and slave, and `SCL` keeps the *cl*ock of those transfers, so that each can speak and listen at the right times. On our Arduino Uno's, I2C connections happen on the Analog Pin Header: `SDA` is pin `A4` and `SCL` is pin `A5`, as is visible in the circuit diagram below.
+
+![gameboy](https://i.pinimg.com/originals/d0/db/60/d0db60afd28a7bace47598990cbfa75f.gif)
+
+Good times.
 
 
-#### (Micro)Servo Motor
-
-![Micro Servo](https://cdn-shop.adafruit.com/970x728/169-06.jpg)
-
-Servo motors are DC motors with a reducing [gear train](https://en.wikipedia.org/wiki/Gear_train) inside as well as a control board. Depending on the length of pulses received on a signal wire, the servo motor will turn to a specific degree. This motion takes time, and so it is important to add `delay()`s to your code to provide time for the movement to complete. Servos are essential for most robotics and controlled motion applications. Microservos, like the ones included in our kits, are normally limited to a bit less than 180 degrees of motion. 'Continous Rotation' servos allow for full 360 degree motion.
-
-![exploded servo](https://upload.wikimedia.org/wikipedia/commons/e/ec/Exploded_Servo.jpg)
-
-
-#### DHT11 Temperature and Relative Humidity Sensor
+#### DHT11 Temperature and Relative Humidity Sensor (Repeat from last week...)
 
 ![dht11](https://cdn-learn.adafruit.com/assets/assets/000/000/576/large1024/weather_dhtsensors.jpg?1396764183)
 
 A semi-water permeable substrate layer next to a thermistor inside this sensor allows for a *relatively* accurate reading of both ambient temperature and humidity. Theoretically, the DHT11 is rated to a precision of plus or minus 2 degrees celsius and 5% humidity, though due to manufacturing realities, the sensor often requires calibration. Despite its analog sensing logic, this sensor communicates over a digital pin — and like most sensors, requires installing a library.
 
-The sensor package itself has *4 legs*, from left to right: power, signal, no connection (NC), ground. It is often mounted on a breakout board, which rearranges those connections (signal, power, ground), integrates the required pullup resistor, and removes the useless *NC* leg. 
+The sensor package itself has *4 legs*, from left to right: power, signal, no connection (NC), ground. It is often mounted on a breakout board, which rearranges those connections (signal, power, ground), integrates the required pullup resistor, and hides the useless *NC* leg. 
 
 ![dht11 legs](http://www.circuitbasics.com/wp-content/uploads/2015/12/DHT11-Pinout-for-three-pin-and-four-pin-types-2-1024x742.jpg)
 
@@ -77,11 +73,11 @@ Remember to try to wire with an encoding schema in mind...
 - Yellow or Purple for Generic Signals
 - Green and Blue for I2C Communication
 
-#### Personal Fan
+#### Remote Control Color Light
 
-Spinning and thermometering! 
+[Spooky action at a distance](https://www.technologyreview.com/s/427174/einsteins-spooky-action-at-a-distance-paradox-older-than-thought/). 
 
-![motors](motors.png)
+![remotelight](remotelight.png)
 
 -----
 
@@ -89,39 +85,55 @@ Spinning and thermometering!
 
 Double check that "Tools" -> "Board" is set to "Arduino/Genuino Uno" and that "Tools" -> "Port" is set to whichever "COM" USB port has a connected "Arduino Uno".
 
-Come back after class! 
+In your Arduino package manager, ensure you install the `IRremote by shirriff` library as well as the `DHT Sensor Library by Adafruit`. The author of the IRremote library has an [interesting blog](http://www.righto.com/2009/08/multi-protocol-infrared-remote-library.html) with lots of IR technology experiments.
+
+Download and install the [1.3.5 New Liquid Crystal Library](https://bitbucket.org/fmalpartida/new-liquidcrystal/downloads/).
 
 ```c
-int motorPin = 3;
- 
-void setup() 
-{ 
-  pinMode(motorPin, OUTPUT);
-  Serial.begin(9600);
-} 
- 
- 
-void loop() 
-{ 
-  if (Serial.available())
-  {
-    int motorSpeed = Serial.parseInt();
-    if (motorSpeed >= 0 && motorSpeed <= 255)
-    {
-      analogWrite(motorPin, motorSpeed);
-    }
-  }
-} 
+/*
+Pins:
+SCL = A5
+SDA = A4
+VCC = 5V
+GND = GND
+*/
 
+//necessary libraries
+#include <Wire.h>
+#include <LCD.h>
+#include <LiquidCrystal_I2C.h>
+
+//create an LCD with the default pinout arrangement and address
+LiquidCrystal_I2C lcd(0x27,2,1,0,4,5,6,7); 
+
+void setup()
+{
+    //this means that the LED backlight is on pin 3 and is pulled low, so a low signal turns the lED off.
+    lcd.setBacklightPin(3,POSITIVE);
+    //turn on the backlight
+    lcd.setBacklight(HIGH); // NOTE: You can turn the backlight off by setting it to LOW instead of HIGH
+    //turn on the lcd, with a 16x2 matrix 
+    lcd.begin(16, 2);
+    //wipe the screen
+    lcd.clear();
+}
+
+void loop()
+{
+    //move the cursor to top left
+    lcd.setCursor(0,0);
+    lcd.print("i <3 arduino!");
+    //move the cursor to the bottom left
+    lcd.setCursor(0,1);
+    lcd.print("arduino <3 me!");
+    delay(100);
+}
 ```
+
+Come back after class for more! 
 
 -----
 
 ### Homework
 
-A week off from breadboarding!
-
-- Solder 10 wires onto 10 other wires. Make some jewelery! 
-- Solder your backpack onto your LCD screen component
-- Check out the sensors available on [Sparkfun.com](https://www.sparkfun.com/categories/23) and [Adafruit.com ](https://www.adafruit.com/category/35) and identify 3 that are interesting to discuss. Try to find a tutorial for each of the 3 and read through what would be required to get it working. What kind of data does it produce?
-
+To be determined. Let's see how the day goes and where interests are.
