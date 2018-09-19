@@ -89,6 +89,8 @@ In your Arduino package manager, ensure you install the `IRremote by shirriff` l
 
 Download and install the [1.3.5 New Liquid Crystal Library](https://bitbucket.org/fmalpartida/new-liquidcrystal/downloads/).
 
+#### Basic LCD Display
+
 ```c
 /*
 Pins:
@@ -130,10 +132,72 @@ void loop()
 }
 ```
 
-Come back after class for more! 
+#### LCD and DHT11 Combination
+
+```c
+//necessary libraries for both components
+#include <Wire.h>
+#include <LCD.h>
+#include <LiquidCrystal_I2C.h>
+#include "DHT.h"
+
+//necessary constants for DHT
+#define DHTPIN 2     
+#define DHTTYPE DHT11
+
+
+//create LCD object with the default pinout arrangement and address
+LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7);
+//create DHT object
+DHT dht(DHTPIN, DHTTYPE);
+
+
+void setup()
+{
+  //this means that the LED backlight is on pin 3 and is pulled low, so a low signal turns the lED off.
+  lcd.setBacklightPin(3, POSITIVE);
+  //turn on the backlight
+  lcd.setBacklight(HIGH); // NOTE: You can turn the backlight off by setting it to LOW instead of HIGH
+  //access lcd, with a 16x2 matrix
+  lcd.begin(16, 2);
+  //wipe the screen
+  lcd.clear();
+
+  //access DHT sensor
+  dht.begin();
+}
+
+
+void loop()
+{
+  //move the cursor to top left
+  lcd.setCursor(0, 0);
+  //get data from sensor
+  float t = dht.readTemperature();
+  //do string combination. it's also possible to just move cursor around and avoid this step
+  lcd.print( "TMP: " + String(t) + "*C");
+
+  //move the cursor to bottom left
+  lcd.setCursor(0, 1);
+  //get data from sensor
+  float h = dht.readHumidity();
+  //do string combination. it's also possible to just move cursor around and avoid this step
+  lcd.print( "HMD: " + String(h) + "%" );
+
+  //wait a bit to prevent flicker
+  delay(500);
+
+  //wipe the screen to prevent data persistence. not really necessart here since the strings on the screen will always be the same length 
+  lcd.clear();
+}
+```
 
 -----
 
 ### Homework
 
-To be determined. Let's see how the day goes and where interests are.
+Combine the LCD screen and IR Receiver components
+
+- When a button on the remote is pressed, show the name of that button — *not its hex or decimal ir code* — on the LCD screen.
+- When buttons 1, 2, and 3 are pressed, turn on and off the red, green, and blue subdiodes of an RGB LED.
+- Bonus Challenge: Could other buttons on the remote control blinking speed of the LED? Brightness? Color blending?
