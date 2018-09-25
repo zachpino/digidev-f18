@@ -1,11 +1,11 @@
-# Week 05 · Action at a Distance
+# Week 06 · Sensor Bomb
 
 Let's use get some libraries into play, and implement more advanced digital sensors and actuators. We'll focus this week on how to go about glueing sample code together.
 
-- [Components](#components): IR Remote and Receiver, LCD Backpack, DHT11 Temperature and Humidity Sensor
-- [Circuits](#circuits): Remote Control Color Light
-- [Code](#code): ! (not), various libraries, function declarations, compound conditionals, type casting
-- [Homework](#homework) : Combine Sensor and Screen
+- [Components](#components): HC-SR04 Distance Sensor
+- [Circuits](#circuits): Sensor Bomb
+- [Code](#code): function definitions, pulseIn, compound conditionals
+- [Homework](#homework) : Wearable Instrument
 
 -----
 
@@ -89,106 +89,79 @@ In your Arduino package manager, ensure you install the `IRremote by shirriff` l
 
 Download and install the [1.3.5 New Liquid Crystal Library](https://bitbucket.org/fmalpartida/new-liquidcrystal/downloads/).
 
-#### Basic LCD Display
+#### Distance Sensor
 
 ```c
-/*
-Pins:
-SCL = A5
-SDA = A4
-VCC = 5V
-GND = GND
-*/
+// Listening 'Echo' Pin
+int echoPin = 7;
+// Blasting 'Trigger' Pin
+int trigPin = 8 ;
+// Red subdiode of RGB LED
+int rPin = 9; 
+// Green subdiode of RGB LED
+int gPin = 10; 
 
-//necessary libraries
-#include <Wire.h>
-#include <LCD.h>
-#include <LiquidCrystal_I2C.h>
+//define bounds in cm
+int maxRange = 200; 
+int minRange = 10; 
 
-//create an LCD with the default pinout arrangement and address
-LiquidCrystal_I2C lcd(0x27,2,1,0,4,5,6,7); 
+//create needed variables at boot to save time later
+long duration, distance; // Duration used to calculate distance
 
-void setup()
-{
-    //this means that the LED backlight is on pin 3 and is pulled low, so a low signal turns the lED off.
-    lcd.setBacklightPin(3,POSITIVE);
-    //turn on the backlight
-    lcd.setBacklight(HIGH); // NOTE: You can turn the backlight off by setting it to LOW instead of HIGH
-    //turn on the lcd, with a 16x2 matrix 
-    lcd.begin(16, 2);
-    //wipe the screen
-    lcd.clear();
+void setup() {
+  //enable USB serial logging
+  Serial.begin (9600);
+
+  //necessary pin modes
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(rPin, OUTPUT); // Use LED indicator (if required)
 }
 
-void loop()
-{
-    //move the cursor to top left
-    lcd.setCursor(0,0);
-    lcd.print("i <3 arduino!");
-    //move the cursor to the bottom left
-    lcd.setCursor(0,1);
-    lcd.print("arduino <3 me!");
-    delay(100);
-}
-```
+void loop() {
+  //set trigger low  to ensure we don't have any noise from previous cycle
+  digitalWrite(trigPin, LOW); 
+  //wait a very small amount of time to let electricity to clear the system
+  delayMicroseconds(2); 
 
-#### LCD and DHT11 Combination
+  //blast out sound!
+  digitalWrite(trigPin, HIGH);
+  //make sure electricity gets to sensor and emits enough sound
+  delayMicroseconds(10); 
 
-```c
-//necessary libraries for both components
-#include <Wire.h>
-#include <LCD.h>
-#include <LiquidCrystal_I2C.h>
-#include "DHT.h"
+  //turn off blaster
+  digitalWrite(trigPin, LOW);
 
-//necessary constants for DHT
-#define DHTPIN 2     
-#define DHTTYPE DHT11
+  //turn listening on and wait
+  duration = pulseIn(echoPin, HIGH);
 
+  //calculate the distance (in cm) based on the speed of sound.
+  //since the amount of time is a round trip, we need to first divide by 2
+  //sound travels 343 meter/second in sea-level, room temp air
+  //343 m/s = .0343 centimeter/microsecond
+  // 1 microsecond / .0343 = 29.1 cm of sound travel / microsecond
+  distance = ( duration / 2 ) / 29.1;
 
-//create LCD object with the default pinout arrangement and address
-LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7);
-//create DHT object
-DHT dht(DHTPIN, DHTTYPE);
+  //error catch
+  if (distance >= maxRange || distance <= minRange){
+    // if sensor reads out of range, send a clear signal that the reading isn't trustworthy
+    Serial.println("-1");
 
+    //signal bad reading
+    digitalWrite(rPin, HIGH); 
+    digitalWrite(gPin, LOW); 
+  }
 
-void setup()
-{
-  //this means that the LED backlight is on pin 3 and is pulled low, so a low signal turns the lED off.
-  lcd.setBacklightPin(3, POSITIVE);
-  //turn on the backlight
-  lcd.setBacklight(HIGH); // NOTE: You can turn the backlight off by setting it to LOW instead of HIGH
-  //access lcd, with a 16x2 matrix
-  lcd.begin(16, 2);
-  //wipe the screen
-  lcd.clear();
+  else {
+    //print reading over usb
+    Serial.println(distance);
+    //signal good reading
+    digitalWrite(rPin, LOW); 
+    digitalWrite(gPin, HIGH); 
+  }
 
-  //access DHT sensor
-  dht.begin();
-}
-
-
-void loop()
-{
-  //move the cursor to top left
-  lcd.setCursor(0, 0);
-  //get data from sensor
-  float t = dht.readTemperature();
-  //do string combination. it's also possible to just move cursor around and avoid this step
-  lcd.print( "TMP: " + String(t) + "*C");
-
-  //move the cursor to bottom left
-  lcd.setCursor(0, 1);
-  //get data from sensor
-  float h = dht.readHumidity();
-  //do string combination. it's also possible to just move cursor around and avoid this step
-  lcd.print( "HMD: " + String(h) + "%" );
-
-  //wait a bit to prevent flicker
-  delay(500);
-
-  //wipe the screen to prevent data persistence. not really necessart here since the strings on the screen will always be the same length 
-  lcd.clear();
+  //Delay 50ms before reading again
+  delay(50);
 }
 ```
 
