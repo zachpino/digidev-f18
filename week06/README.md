@@ -1,65 +1,30 @@
-# Week 06 · Sensor Bomb
+# Week 06 · Managing and Collecting Data 
 
-Let's use get some libraries into play, and implement more advanced digital sensors and actuators. We'll focus this week on how to go about glueing sample code together.
+Let's put everything we've learned into a deployable package, and talk about how to plan for, measure, and minimize power use in embedded applications.
 
 - [Components](#components): HC-SR04 Distance Sensor
-- [Circuits](#circuits): Sensor Bomb
-- [Code](#code): function definitions, pulseIn, compound conditionals
-- [Homework](#homework) : Wearable Instrument
+- [Circuits](#circuits): Weather Station
+- [Code](#code): pulseIn, compound conditionals, low-power library, serial plotter, creating datasets
+- [Homework](#homework) : Debate Prep and Download Fusion
+- [Battery Life Calculator](https://www.digikey.com/en/resources/conversion-calculators/conversion-calculator-battery-life)
 
 -----
 
 ### Components
 
-#### IR Remote and TSOP38238 Receiver
+#### HC-SR04
 
-![IR remote and receiver](https://cdn-shop.adafruit.com/970x728/157-01.jpg)
+![Distance Sensor](https://2.bp.blogspot.com/-UsoLt1EynwE/V1ZlbCI7SjI/AAAAAAAAF24/GaHFzkrVmc8Roo3IunswHXkPLRhdW-VSgCLcB/s320/hcsr04.jpg)
 
-This combination of components allows us to signal the Arduino at a distance and actuate selectively based on a variety of different button presses.
+The HC-SR04 is a very cheap sensor that can accurately determine how far away the nearest object is to it. It is simple to use, and highly accurate when set up with a knowledge of its limitations and abilities. When a signal is sent to a certain *trigger* pin on the HC-SR04, an unaudible sonic *ping* is generated that propogates outwards in a conic shape with around 30 degrees of spread. Quickly switching the *trigger* pin off, and turning on the *echo* pin forces the sensor into listening mode, and it will wait until it hears its own voice bounce back. It alerts a microcontroller when it hears its voice, and the microcontroller can determine how much time passed. With knowledge of the speed of sound, acurate distances can then be calculated. 
 
-Fundamentally, an IR remote is just an LED that blinks light *really fast* that we can't see. Most IR remotes operate at 940 nanometers, which is above the human eye's limit of around 700 nanometers. If we were far more sensitive like a [salamander more attuned to IR raditation](https://en.wikipedia.org/wiki/Axolotl), our skin might be able to sense an IR remote blast as heat! 
+![model](https://hackster.imgix.net/uploads/attachments/208568/HCSR04-Schema.jpg?auto=compress%2Cformat&w=680&h=510&fit=max)
 
-When different buttons are pressed on an IR remote, unique patterns are flashed by the infrared LED, sort of like [Morse Code](https://en.wikipedia.org/wiki/Morse_code) or [semaphore](https://en.wikipedia.org/wiki/Flag_semaphore). This sort of signaling has [been around since the early industrial revolution](https://en.wikipedia.org/wiki/Infrared#History_of_infrared_science), and yet the technology world is currently abandoning it for Bluetooth and NFC — which often makes for less reliable, more complex, and far power-hungrier outcomes. Nevertheless, designers continue to do [some super interesting experiments](http://niklas-isselburg.com/project-binairy_talk.php) in the space. In the consumer electronics world, universal and learning remotes like [Logitech Harmony Remotes](https://www.logitech.com/en-us/harmony-universal-remotes) can mimic the flashing patterns of other remotes and send appropriate signals to device receivers.
+The range of the sensor's voice and sensitivity of its ears allows it to measure distances from 2cm to 400cm in ideal conditions, though its real precision will be dependent on the accuracy of the driving microcontroller's clock and ambient environmental and sonic conditions. For maximum precision, the humidity and distance from sea-level of the sensor need to be taken into account, and there are many ways to [add even more precision](https://www.intorobotics.com/8-tutorials-to-solve-problems-and-improve-the-performance-of-hc-sr04/) by modulating how often the ping is emmitted to achieve better range. In ultrasonically noisy environments, a more expensive though more accurate [light-based time of flight (ToF) sensor](https://www.sparkfun.com/products/12785) is a much better choice.
 
-Due to the fast switching nature of the infrared signal's carrier signal (38,000 cycles per second) and the slow processing of the Arduino Uno's PWM pins (~500 cycles per second), the signal needs to be processed by an IR receiver: the TSOP38238. The receiver component converts the various fast switching operations, and demodulates it (decodes and slows it down) for our microcontroller.
+![bats!](https://askabiologist.asu.edu/sites/default/files/echolocation.jpg)
 
-Learn more about the complex [modulation and demodulation](https://learn.sparkfun.com/tutorials/ir-communication#ir-communication-basics) that makes every television remote work. It's magic that this stuff operates at all, and yet it's so commonplace that we only notice it when it fails. 
-
-
-#### Liquid Crystal Display (LCD) and I2C Backpack
-
-![LCD](https://cdn-shop.adafruit.com/970x728/181-02.jpg)
-
-Finally, some visual feedback! 
-
-These simple screens — still common in calculators, microwaves, and fitness trackers amongst other household digital objects — rely on the previously mentioned relationship between crystals and electricity. Each one of a field of tiny crystals uses a mated transistor to straighten out or rotate. When energized, the [crystal rotates and blocks polarized light](https://www.explainthatstuff.com/lcdtv.html) from passing through it, kind of like window blinds. Otherwise, it is an ugly, mostly transmissive green. An LED backlight of variable color is often placed behind the crystal matrix, so that contrast can be improved. LCD displays are amazingly low power-consumptive compared to most other display types.
-
-16 pins are used to control an LCD display with a backlight. 4 manage power, 1 controls the brightness of the LED backlight, 2 handle selecting and writing to specific memory registers (used to set where to display characters), and 8 handle the choice of characters themselves and data transfer (which needs to happen in a very particular sequence).
-
-![LCD bare](https://components101.com/sites/default/files/component_pin/16x2-LCD-Pinout.png)
-
-This is crazy, it would eat up most of our Arduino's available pins on its own! 
-
-Because of the complexity of the pinout of LCD components, we will use a simplifying code libary and hardware *backpack*, whose sole job is to reduce the number of pins required to plug in the component. This particular backback leverages the [I2C digital communication standard](https://learn.sparkfun.com/tutorials/i2c), common to hobbyist digital sensors. I2C, short for "inter-integrated circuits" and pronounced "eye-squared-sea," was invented in 1982 to aid in the digital communication between a fast 'master' device and many slower attached 'slave' devices — solving the timing problems exhibited by its competitor standard, SPI (to be discussed later). Each device in an I2C system needs to have a unique address, and up to 111 unique devices can be connected in the same circuit, usually *on the same 4 pins*. This expands our Arduino's reach considerably.
-
-(BTW the offensive and anachronistic naming convention unfortunately chosen by the I2C creators is currently being attacked by most [progressive computer scientists](https://www.theregister.co.uk/2018/09/11/python_purges_master_and_slave_in_political_pogrom/). Let's hope it soon gets replaced.)
-
-I2C is an easy to implement standard that uses pins labels `SDA` and `SCL` for all communication. `SDA` carries the *da*ta between master and slave, and `SCL` keeps the *cl*ock of those transfers, so that each can speak and listen at the right times. On our Arduino Uno's, I2C connections happen on the Analog Pin Header: `SDA` is pin `A4` and `SCL` is pin `A5`, as is visible in the circuit diagram below.
-
-![gameboy](https://i.pinimg.com/originals/d0/db/60/d0db60afd28a7bace47598990cbfa75f.gif)
-
-Good times.
-
-
-#### DHT11 Temperature and Relative Humidity Sensor (Repeat from last week...)
-
-![dht11](https://cdn-learn.adafruit.com/assets/assets/000/000/576/large1024/weather_dhtsensors.jpg?1396764183)
-
-A semi-water permeable substrate layer next to a thermistor inside this sensor allows for a *relatively* accurate reading of both ambient temperature and humidity. Theoretically, the DHT11 is rated to a precision of plus or minus 2 degrees celsius and 5% humidity, though due to manufacturing realities, the sensor often requires calibration. Despite its analog sensing logic, this sensor communicates over a digital pin — and like most sensors, requires installing a library.
-
-The sensor package itself has *4 legs*, from left to right: power, signal, no connection (NC), ground. It is often mounted on a breakout board, which rearranges those connections (signal, power, ground), integrates the required pullup resistor, and hides the useless *NC* leg. 
-
-![dht11 legs](http://www.circuitbasics.com/wp-content/uploads/2015/12/DHT11-Pinout-for-three-pin-and-four-pin-types-2-1024x742.jpg)
+The HC-SR04 sensor was developed [biomimetically](https://www.cnbc.com/2015/05/22/biomimetics-improving-sonar-by-borrowing-from-nature.html) — and effectively recreates the [echolocational](https://en.wikipedia.org/wiki/Animal_echolocation) spatial awareness systems of dolphins and other cetaceans, bats, tenrecs, and switfts. It also derived from the same *Sonar* sensor logic lineage implemented by [submarines](https://en.wikipedia.org/wiki/Sonar) and [sounding vessels](https://en.wikipedia.org/wiki/Echo_sounding) underwater — and a waterproofed version of the sensor is [similarly available](http://chinaultrasound.com/product/1mhz-ultrasonic-transducer-depth-measurement-td1000ka/). Humans even have a [weak form of native echolocation](https://en.wikipedia.org/wiki/Human_echolocation) based on our own voice, ears, and our cognitive understanding of the Doppler effect. This sense can be [further developed](https://www.sciencealert.com/humans-are-being-taught-to-echolocate-like-dolphins-and-it-s-surprisingly-easy) — and has been by several sighted and vision-impaired individuals — for improved sightless navigational awareness inside and outside of low-light conditions.
 
 ----- 
 
@@ -73,11 +38,18 @@ Remember to try to wire with an encoding schema in mind...
 - Yellow or Purple for Generic Signals
 - Green and Blue for I2C Communication
 
-#### Remote Control Color Light
+#### Weather Station
 
-[Spooky action at a distance](https://www.technologyreview.com/s/427174/einsteins-spooky-action-at-a-distance-paradox-older-than-thought/). 
+Here, let's combine a bunch of sensors into a single weather station object.
 
-![remotelight](remotelight.png)
+- DHT-11 to measure temperature and humidity
+- DC Motor to measure wind speeds (modeling an [anemometer](https://www.adafruit.com/product/1733))
+- Trimpot to measure wind direction (modeling a high precision [anemogoniometer](https://uk.rs-online.com/web/p/products/2943690/))
+- Photoresistor to measure solar radiation (modeling a wide dynamic range [photometer](https://www.adafruit.com/product/1980))
+- HC-SR04 to measure nearest object proximity, to determine if there is something obstructing accurate readings.
+- We probably would also want to add a [barometer](https://www.adafruit.com/product/1893) to detect incoming storms likelihood, but there's nothing in our kits for that! 
+
+![weather station](weatherstation.png)
 
 -----
 
@@ -85,9 +57,7 @@ Remember to try to wire with an encoding schema in mind...
 
 Double check that "Tools" -> "Board" is set to "Arduino/Genuino Uno" and that "Tools" -> "Port" is set to whichever "COM" USB port has a connected "Arduino Uno".
 
-In your Arduino package manager, ensure you install the `IRremote by shirriff` library as well as the `DHT Sensor Library by Adafruit`. The author of the IRremote library has an [interesting blog](http://www.righto.com/2009/08/multi-protocol-infrared-remote-library.html) with lots of IR technology experiments.
-
-Download and install the [1.3.5 New Liquid Crystal Library](https://bitbucket.org/fmalpartida/new-liquidcrystal/downloads/).
+Download and install the [Low-Power Library](https://learn.sparkfun.com/tutorials/reducing-arduino-power-consumption) to put the Arduino into hibernation.
 
 #### Distance Sensor
 
@@ -165,12 +135,43 @@ void loop() {
 }
 ```
 
+Come back after class for Weather Station code.
+
 -----
 
 ### Homework
 
-Combine the LCD screen and IR Receiver components
+We need to make some decisions for going forward. In assigned teams, please research the following microcontroller boards and prepare a **10 slide** presentation to convince the class that we should definitively pursue these platforms for our *wearable* projects.
 
-- When a button on the remote is pressed, show the name of that button — *not its hex or decimal ir code* — on the LCD screen.
-- When buttons 1, 2, and 3 are pressed, turn on and off the red, green, and blue subdiodes of an RGB LED.
-- Bonus Challenge: Could other buttons on the remote control blinking speed of the LED? Brightness? Color blending?
+Some things to think about...
+
+- Explore the general capabilities of the board and its weaknesses. What makes it unique?
+- What are the Input and Output options of the board?
+- How affordable is the board? Any interesting accessories designed for it?
+- How compatible is the board with common sensors? For what kinds of sensor-based applications is it a perfect fit?
+- How easy to use and program is the board? How much will need to change our regular Arduino Uno code?
+- How power hungry is the board? Does it have any power-related specifics?
+- How *wearable* is the board? Anything notable about its dimensions?
+- Find inspirational projects that were created with the board. What has the Arduino community already accomplished with this technology?
+- Research the boards below that other teams were assigned. Attack them for their weakenesses, and prepare to defend your own board against obvious challenges!
+
+The debate structure will be as follows:
+
+- Team presents their 10 slide deck (5-7 minutes)
+- 3 minutes for questions and challenges from the audience
+- 2 minute rebuttal
+
+CS + BS : [Particle Electron](https://www.particle.io/products/hardware/electron-cellular-2g-3g-lte/)
+
+PT + SAG : [Paricle Photon](https://www.particle.io/products/hardware/photon-wifi)
+
+AG + LN : [Arduino Nano](https://store.arduino.cc/usa/arduino-nano) / [Pro Mini](https://store.arduino.cc/usa/arduino-pro-mini) and [ESP8266](https://www.amazon.com/HiLetgo-Internet-Development-Wireless-Micropython/dp/B010O1G1ES/ref=sr_1_3?ie=UTF8&qid=1537895379&sr=8-3&keywords=wifi+Arduino) Wifi Board
+
+JS + TB : [Arduino Lilypad Family](https://learn.sparkfun.com/tutorials/choosing-a-lilypad-arduino-for-your-project)
+
+JK : [Breadboard Arduino](https://www.arduino.cc/en/Main/Standalone)
+
+-----
+
+Also, for 3d modeling lessons in the future, please [download and install Fusion360 from Autodesk](https://www.autodesk.com/products/fusion-360/students-teachers-educators?td=aexfusion). You'll need to create an Education Account, but it's free!
+
