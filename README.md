@@ -7,5 +7,6 @@ Documentation and Resources for the Fall 2018 IIT Institute of Design Digital De
 - [Week 03 · Looping](week03/README.md) 	
 - [Week 04 · Odds and Ends](week04/README.md) 	
 - [Week 05 · Action at a Distance](week05/README.md) 	
-- [Week 05 · Managing and Collecting Data ](week06/README.md) 	
+- [Week 06 · Managing and Collecting Data](week06/README.md) 	
+- [Week 07 · Midterm Review and Looking Forwards](week07/README.md) 	
 

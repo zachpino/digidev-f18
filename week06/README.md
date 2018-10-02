@@ -135,8 +135,6 @@ void loop() {
 }
 ```
 
-Come back after class for Weather Station code.
-
 -----
 
 ### Homework
