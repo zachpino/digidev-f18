@@ -83,14 +83,14 @@ The [citizen scientist movement](https://en.wikipedia.org/wiki/Citizen_science) 
 
 ## Buggy Space
 
-Embedded microcontrollers allow technologists to not only understand their users better, but also their users' built and natural environments. Choose a compelling and available *physical* space (indoor or outdoor), and design a *set of devices* that would collect data to better understand the complexities of how humans use that space. Topics of interest might include...
+Embedded microcontrollers allow technologists to not only understand their users better, but also their users' built and natural environments. Choose a compelling and available *physical* space (indoor or outdoor, public or private), and design a *set of devices* that would collect data in order to better understand the complexities of how humans use that space. Topics of interest might include...
 
 - Team Collaboration and Social Interaction
 - Healthfulness
 - Pathfinding and Navigation
 - Space and Resource Availability and Usage 
 
-After choosing a topic area and some technological interventions, imagine how the data derived from the sensors might be synthesized into recommendations for space managers or interior, exterior, or landscape architects.
+After choosing a topic area and some technological interventions, imagine how the data derived from the sensors might be synthesized into recommendations for urban planners, space managers, or interior, exterior, or landscape architects.
 
 #### Considerations
 	- How do the data collection objects blend into, or stand out from, their space?
