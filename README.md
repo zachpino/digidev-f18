@@ -10,3 +10,6 @@ Documentation and Resources for the Fall 2018 IIT Institute of Design Digital De
 - [Week 06 · Managing and Collecting Data](week06/README.md) 	
 - [Week 07 · Midterm Review and Looking Forwards](week07/README.md) 	
 
+- [Final Briefs](briefs.md)
+
+- [Week 08 · Sensor Diversity](week08/README.md)
