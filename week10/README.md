@@ -57,4 +57,6 @@ Prepare a small presentation on your project to share with the class next week. 
 - Live Circuit
 - Unanswered Questions / What You Need Help On
 
-We also will do another order on Friday, November 2. Add your parts onto the Google Sheet!
+We also will do another order on Friday, November 2. Add your parts onto the Google Sheet please before 9am on Friday. 
+
+This is also a good moment to make sure your Blackboard contributions are up-to-date. Thank you!
