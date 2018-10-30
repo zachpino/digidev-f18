@@ -56,3 +56,5 @@ Prepare a small presentation on your project to share with the class next week. 
 - Sketches / Simple Renders
 - Live Circuit
 - Unanswered Questions / What You Need Help On
+
+We also will do another order on Friday, November 2. Add your parts onto the Google Sheet!
