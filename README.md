@@ -13,3 +13,5 @@ Documentation and Resources for the Fall 2018 IIT Institute of Design Digital De
 - [Final Briefs](briefs.md)
 
 - [Week 08 · Sensor Diversity](week08/README.md)
+- Week 09 · Work Time
+- [Week 10 · Odds and Ends v2](week10/README.md)
