@@ -23,7 +23,7 @@ Regardless of chosen brief, final projects will be evaluated on the following pa
 	- Projects that are unconsidered in their aesthetics, or mismatched to their audience and environment, will be scored poorly.
 
 
-Check-in deliverables and presentations will be introduced as needed to maintain regular progress. **Work is due for presentation on December 4, and all additional materials need to be submitted by December 10.**
+Check-in deliverables and presentations will be introduced as needed to maintain regular progress. **Work is due for presentation on December 4, and all additional materials need to be submitted by December 11.**
 
 Have fun with these! All can be pushed in a more speculative direction once proof of concept is reached with contemporary components.
 
